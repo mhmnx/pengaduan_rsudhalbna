@@ -2,7 +2,7 @@
 
 services:
   # Database khusus untuk aplikasi pengaduan
-  pengaduan_db:
+  db_pengaduan:
     image: postgres:15
     container_name: pengaduan_db
     restart: unless-stopped
@@ -25,9 +25,9 @@ services:
       # Map aplikasi ke port host yang tidak terpakai, misal 5001
       - "5001:5000"
     depends_on:
-      - pengaduan_db
+      - db_pengaduan
     environment:
-      - DB_HOST=pengaduan_db # Gunakan nama service database ini
+      - DB_HOST=db_pengaduan # Gunakan nama service database ini
       - DB_PORT=5432 # Port internal database
       - DB_NAME=pengaduan_db
       - DB_USER=postgres
@@ -36,3 +36,7 @@ services:
 
 volumes:
   pengaduan_data_vol:
+
+networks:
+  shared-network:
+    external: true

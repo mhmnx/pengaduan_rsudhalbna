@@ -1,0 +1,55 @@
+<!-- Kop Laporan -->
+<img src="{{ url_for('static', filename='utils/kop.jpg') }}" alt="kop" width="700px" height="100px" style="align-items: center;" >
+<div style="text-align: center; margin-bottom: 30px;">
+    <h4>Laporan Aduan Pelayanan</h4>
+    <hr>
+</div>
+
+<!-- Tabel Aduan -->
+<div class="table-responsive" style="margin-top: 20px;">
+    <table class="table table-bordered" width="100%" cellspacing="0" style="text-align: center;">
+        <thead style="background-color: #f8f9fc; color: #000000;">
+            <tr>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">No</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">Tanggal</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">Jenis Aduan</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">Tujuan</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">Sumber</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">Waktu Respon</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Isi Aduan</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6;">Tindak Lanjut</th>
+                <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Penyelesaian</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aduan in aduan_list %}
+            <tr>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ loop.index }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ aduan.tanggal }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ aduan.jenis }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ aduan.tujuan }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ aduan.sumber }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ aduan.waktu_respon }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6; text-align: justify;">{{ aduan.isi }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6;">{{ aduan.tindak_lanjut }}</td>
+                <td style="padding: 8px; border: 1px solid #dee2e6; text-align: justify;">{{ aduan.penyelesaian }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Tombol cetak -->
+<div class="text-right" style="margin-top: 30px;">
+    <button class="btn btn-primary" onclick="window.print();">Cetak Laporan</button>
+</div>
+
+<!-- Menghilangkan tombol cetak saat dokumen dicetak -->
+<script type="text/javascript">
+    window.onbeforeprint = function() {
+        document.querySelector('.btn-primary').style.display = 'none';
+    };
+    window.onafterprint = function() {
+        document.querySelector('.btn-primary').style.display = 'block';
+    };
+</script>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lapor Pandu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar {
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebar.collapsed {
+            margin-left: -250px;
+        }
+
+        #toggleSidebarBtn {
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        #content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav h5 {
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                z-index: 1040;
+                height: 100%;
+            }
+
+            #toggleSidebarBtn {
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                z-index: 1050;
+            }
+
+            .sidebar-brand {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            nav h5 {
+                font-size: 16px;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        footer.sticky-footer {
+            padding: 1rem 0;
+            font-size: 14px;
+            background-color: #f8f9fc;
+        }
+    </style>
+</head>
+<body id="page-top">
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="bg-gradient-primary sidebar sidebar-dark">
+        <div class="sidebar-brand d-flex align-items-center justify-content-center">
+            <div class="sidebar-brand-text mx-3">Lapor Pandu</div>
+        </div>
+        <hr class="sidebar-divider my-0">
+        <li class="nav-item"><a class="nav-link" href="/dashboard"><i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/aduan"><i class="fas fa-fw fa-edit"></i> <span>Aduan</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/reports"><i class="fas fa-fw fa-table"></i> <span>Reports</span></a></li>
+        
+        {% if session.get('role') == 'admin' %}
+        <hr class="sidebar-divider">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserManagement"
+                aria-expanded="true" aria-controls="collapseUserManagement">
+                <i class="fas fa-fw fa-users-cog"></i>
+                <span>Kelola Pengguna</span>
+            </a>
+            <div id="collapseUserManagement" class="collapse" aria-labelledby="headingTwo" data-parent="#sidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Pengelolaan Pengguna:</h6>
+                    <a class="collapse-item" href="{{ url_for('manage_users') }}">Daftar Pengguna</a>
+                    <a class="collapse-item" href="{{ url_for('add_user') }}">Tambah Pengguna</a>
+                </div>
+            </div>
+        </li>
+        {% endif %}
+
+        <hr class="sidebar-divider">
+        <li class="nav-item"><a class="nav-link" href="/logout"><i class="fas fa-fw fa-sign-out-alt"></i> <span>Logout</span></a></li>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper">
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar shadow position-relative mb-4">
+            <!-- Toggle Sidebar Button -->
+            <button id="toggleSidebarBtn" onclick="toggleSidebar()">&lt;</button>
+            <!-- Page Title -->
+            <h5 class="mx-auto">Lapor Pandu</h5>
+        </nav>
+        <div class="container-fluid"> {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+    </div>
+        <!-- Main Content -->
+        <div class="container-fluid mb-4">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white mt-auto">
+            <div class="container my-auto">
+                <div class="text-center my-auto">
+                    <span>&copy; 2025 Lapor Pandu</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+<!-- JS Scripts -->
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const btn = document.getElementById('toggleSidebarBtn');
+        sidebar.classList.toggle('collapsed');
+        btn.innerHTML = sidebar.classList.contains('collapsed') ? '&gt;' : '&lt;';
+    }
+</script>
+
+{% block script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!-- templates/dashboard.html -->
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
+<div class="row">
+    <!-- Total Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-secondary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Total Aduan</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chart_data['Total'] }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- Diproses Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Aduan Diproses</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chart_data['Diproses'] }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- Selesai Card -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Aduan Selesai</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chart_data['Selesai'] }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- Merah -->
+<div class="col-xl-4 col-md-6 mb-4">
+    <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card-body">
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Aduan Merah</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chart_data['Merah'] }}</div>
+        </div>
+    </div>
+</div>
+<!-- Kuning -->
+<div class="col-xl-4 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Aduan Kuning</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chart_data['Kuning'] }}</div>
+        </div>
+    </div>
+</div>
+<!-- Hijau -->
+<div class="col-xl-4 col-md-6 mb-4">
+    <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Aduan Hijau</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chart_data['Hijau'] }}</div>
+        </div>
+    </div>
+</div>
+<!-- Pie Chart -->
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Distribusi Aduan</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="aduanChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Distribusi Jenis Aduan</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="jenisAduanChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx1 = document.getElementById('aduanChart').getContext('2d');
+    const chart1 = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Total', 'Diproses', 'Selesai'],
+            datasets: [{
+                label: 'Jumlah Aduan',
+                data: [{{ chart_data['Total'] }}, {{ chart_data['Diproses'] }}, {{ chart_data['Selesai'] }}],
+                backgroundColor: ['#5a5c69', '#4e73df', '#36b9cc'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0  // agar tidak ada angka desimal
+                    }
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('jenisAduanChart').getContext('2d');
+    const chart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Merah', 'Kuning', 'Hijau'],
+            datasets: [{
+                label: 'Jumlah Aduan per Jenis',
+                data: [{{ chart_data['Merah'] }}, {{ chart_data['Kuning'] }}, {{ chart_data['Hijau'] }}],
+                backgroundColor: ['#e74a3b', '#f6c23e', '#1cc88a'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

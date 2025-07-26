@@ -1,0 +1,150 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-4 text-gray-800">Laporan Aduan</h1>
+
+<form method="GET" action="{{ url_for('reports') }}">
+    <div class="form-row align-items-end">
+        <div class="form-group col-md-2">
+            <label for="jenis_aduan">Jenis</label>
+            <select class="form-control" id="jenis_aduan" name="jenis_aduan">
+                <option value="">Semua</option>
+                <option value="Hijau" {% if request.args.get('jenis_aduan') == 'Hijau' %}selected{% endif %}>Hijau</option>
+                <option value="Kuning" {% if request.args.get('jenis_aduan') == 'Kuning' %}selected{% endif %}>Kuning</option>
+                <option value="Merah" {% if request.args.get('jenis_aduan') == 'Merah' %}selected{% endif %}>Merah</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="status_aduan">Status</label>
+            <select class="form-control" id="status_aduan" name="status_aduan">
+                <option value="">Semua</option>
+                <option value="Diproses" {% if request.args.get('status_aduan') == 'Diproses' %}selected{% endif %}>Diproses</option>
+                <option value="Selesai" {% if request.args.get('status_aduan') == 'Selesai' %}selected{% endif %}>Selesai</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="tanggal_mulai">Mulai</label>
+            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ request.args.get('tanggal_mulai') or '' }}">
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="tanggal_akhir">Akhir</label>
+            <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" value="{{ request.args.get('tanggal_akhir') or '' }}">
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="tujuan_aduan">Tujuan</label>
+            <select name="tujuan_aduan" class="form-control" id="tujuan_aduan">
+                <option value="" {% if not request.args.get('tujuan_aduan') %}selected{% endif %}>Semua</option>
+                <option value="Tata Usaha" {% if request.args.get('tujuan_aduan') == "Tata Usaha" %}selected{% endif %}>Tata Usaha</option>
+                <option value="Pelayanan" {% if request.args.get('tujuan_aduan') == "Pelayanan" %}selected{% endif %}>Pelayanan</option>
+                <option value="Penunjang" {% if request.args.get('tujuan_aduan') == "Penunjang" %}selected{% endif %}>Penunjang</option>
+                <option value="Keuangan" {% if request.args.get('tujuan_aduan') == "Keuangan" %}selected{% endif %}>Keuangan</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="sumber_aduan">Sumber</label>
+            <select name="sumber_aduan" class="form-control" id="sumber_aduan">
+                <option value="" {% if not request.args.get('sumber_aduan') %}selected{% endif %}>Semua</option>
+                <option value="Langsung" {% if request.args.get('sumber_aduan') == "Langsung" %}selected{% endif %}>Langsung</option>
+                <option value="Kotak Saran" {% if request.args.get('sumber_aduan') == "Kotak Saran" %}selected{% endif %}>Kotak Saran</option>
+                <option value="Telepon" {% if request.args.get('sumber_aduan') == "Telepon" %}selected{% endif %}>Telepon</option>
+                <option value="Media Sosial" {% if request.args.get('sumber_aduan') == "Media Sosial" %}selected{% endif %}>Media Sosial</option>
+                <option value="Lainnya" {% if request.args.get('sumber_aduan') == "Lainnya" %}selected{% endif %}>Lainnya</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary btn-block">Tampilkan</button>
+        </div>
+    </div>
+</form>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Aduan</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Jenis Aduan</th>
+                        <th>Tujuan</th>
+                        <th>Sumber</th>
+                        <th>Status</th>
+                        <th>Tindak Lanjut</th>
+                        <th>Bukti</th>
+                        <th>Dokumentasi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aduan in aduan %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ aduan.tanggal }}</td>
+                        <td>{{ aduan.jenis }}</td>
+                        <td>{{ aduan.tujuan }}</td>
+                        <td>{{ aduan.sumber }}</td>
+                        <td>{{ aduan.status }}</td>
+                        <td>{{ aduan.tindak_lanjut }}</td>
+                        <td>
+                            {% if aduan.bukti %}
+                                <a href="{{ url_for('static', filename='uploads/' ~ aduan.bukti) }}" class="btn btn-info btn-sm" target="_blank">Lihat</a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if aduan.dokumentasi %}
+                                <a href="{{ url_for('static', filename='uploads/' ~ aduan.dokumentasi) }}" class="btn btn-secondary btn-sm" target="_blank">Lihat Dokumentasi</a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('edit_aduan', id=aduan.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_aduan', id=aduan.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Anda yakin ingin menghapus aduan ini?')">Hapus</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="text-right">
+    {% set print_params = [] %}
+    {% if request.args.get('status_aduan') %}
+        {% set _ = print_params.append('status=' + request.args.get('status_aduan')) %}
+    {% endif %}
+    {% if request.args.get('jenis_aduan') %}
+        {% set _ = print_params.append('jenis=' + request.args.get('jenis_aduan')) %}
+    {% endif %}
+    {% if request.args.get('tujuan_aduan') %}
+        {% set _ = print_params.append('tujuan=' + request.args.get('tujuan_aduan')) %}
+    {% endif %}
+    {% if request.args.get('sumber_aduan') %}
+        {% set _ = print_params.append('sumber=' + request.args.get('sumber_aduan')) %}
+    {% endif %}
+    {% if request.args.get('tanggal_mulai') %}
+        {% set _ = print_params.append('tanggal_mulai=' + request.args.get('tanggal_mulai')) %}
+    {% endif %}
+    {% if request.args.get('tanggal_akhir') %}
+        {% set _ = print_params.append('tanggal_akhir=' + request.args.get('tanggal_akhir')) %}
+    {% endif %}
+
+    {% set print_query_string = print_params | join('&') %}
+    
+    <a href="{{ url_for('print_pdf') }}?{{ print_query_string }}" class="btn btn-primary">Cetak Laporan</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-4 text-gray-800">Edit Aduan</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('edit_aduan', id=data.id) }}" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="tanggal">Tanggal</label>
+        <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ data.tanggal | default('') }}" required>
+    </div>
+    <div class="form-group">
+        <label for="jenis">Jenis Aduan</label>
+        <select class="form-control" id="jenis" name="jenis" required>
+            <option value="Hijau" {% if data.jenis == 'Hijau' %}selected{% endif %}>Hijau</option>
+            <option value="Kuning" {% if data.jenis == 'Kuning' %}selected{% endif %}>Kuning</option>
+            <option value="Merah" {% if data.jenis == 'Merah' %}selected{% endif %}>Merah</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="tujuan">Tujuan</label>
+        <select name="tujuan" class="form-control" required>
+            <option value="Tata Usaha" {% if data.tujuan == 'Tata Usaha' %}selected{% endif %}>Tata Usaha</option>
+            <option value="Pelayanan" {% if data.tujuan == 'Pelayanan' %}selected{% endif %}>Pelayanan</option>
+            <option value="Penunjang" {% if data.tujuan == 'Penunjang' %}selected{% endif %}>Penunjang</option>
+            <option value="Keuangan" {% if data.tujuan == 'Keuangan' %}selected{% endif %}>Keuangan</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="sumber">Sumber Aduan</label>
+        <select name="sumber" class="form-control" required>
+            <option value="Langsung" {% if data.sumber == 'Langsung' %}selected{% endif %}>Langsung</option>
+            <option value="Kotak Saran" {% if data.sumber == 'Kotak Saran' %}selected{% endif %}>Kotak Saran</option>
+            <option value="Telepon" {% if data.sumber == 'Telepon' %}selected{% endif %}>Telepon</option>
+            <option value="Media Sosial" {% if data.sumber == 'Media Sosial' %}selected{% endif %}>Media Sosial</option>
+            <option value="Lainnya" {% if data.sumber == 'Lainnya' %}selected{% endif %}>Lainnya</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="waktu_respon">Waktu Respon</label>
+        <input type="number" class="form-control" id="waktu_respon" name="waktu_respon" value="{{ data.waktu_respon | default('') }}" required>
+    </div>
+    <div class="form-group">
+        <label for="isi">Isi Aduan</label>
+        <textarea class="form-control" id="isi" name="isi" rows="4" required>{{ data.isi | default('') }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="status">Status</label>
+        <select class="form-control" id="status" name="status" required>
+            <option value="Diproses" {% if data.status == 'Diproses' %}selected{% endif %}>Diproses</option>
+            <option value="Selesai" {% if data.status == 'Selesai' %}selected{% endif %}>Selesai</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="bukti">Bukti (jika ingin mengganti)</label>
+        {% if data.bukti %}
+            <p>File lama: <a href="{{ url_for('static', filename='uploads/' + data.bukti) }}" target="_blank">{{ data.bukti }}</a></p>
+        {% endif %}
+        <input type="file" class="form-control-file" id="bukti" name="bukti">
+    </div>
+    
+    <div class="form-group">
+        <label for="tindak_lanjut">Tindak Lanjut</label>
+        <textarea class="form-control" id="tindak_lanjut" name="tindak_lanjut" rows="4" required>{{ data.tindak_lanjut | default('') }}</textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for="dokumentasi">Dokumentasi Tindak Lanjut (jika ingin mengganti)</label>
+        {% if data.dokumentasi %}
+            <p>File lama: <a href="{{ url_for('static', filename='uploads/' + data.dokumentasi) }}" target="_blank">{{ data.dokumentasi }}</a></p>
+        {% else %}
+            <p>Belum ada dokumentasi terlampir.</p>
+        {% endif %}
+        <input type="file" class="form-control-file" id="dokumentasi" name="dokumentasi">
+    </div>
+    <div class="form-group">
+        <label for="penyelesaian">Penyelesaian</label>
+        <textarea class="form-control" id="penyelesaian" name="penyelesaian" rows="4" required>{{ data.penyelesaian | default('') }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Aduan</button>
+</form>
+{% endblock %}

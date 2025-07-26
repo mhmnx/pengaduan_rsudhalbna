@@ -1,17 +1,21 @@
 # config.py
 
 import os
+from dotenv import load_dotenv
+load_dotenv() # memuat variabel dari file .env (untuk development lokal)
+
+    
 
 class Config:
     # Pengaturan Flask
-    SECRET_KEY = os.environ.get('FLASK_SECRET_KEY') or 'your_secret_key'
     SESSION_COOKIE_NAME = 'session'
 
     # Pengaturan Database MySQL
-    HOST = 'localhost'
-    DATABASE = 'pengaduan_db'
-    USER = 'postgres'  # Sesuaikan dengan username MySQL Anda
-    PASSWORD = 'postgres'  # Sesuaikan dengan password MySQL Anda
+    SECRET_KEY = os.environ.get('FLASK_SECRET_KEY') or 'default_secret_key'
+    HOST = os.environ.get('DB_HOST')
+    DATABASE = os.environ.get('DB_NAME')
+    USER = os.environ.get('DB_USER')
+    PASSWORD = os.environ.get('DB_PASSWORD')
 
     # Pengaturan lainnya (misalnya untuk email atau lainnya)
     MAIL_SERVER = 'smtp.gmail.com'

@@ -18,7 +18,7 @@ services:
 
   # Aplikasi Flask untuk pengaduan
   pengaduan_app:
-    build: .
+    image: mhmnx/pengaduan_app:latest
     container_name: pengaduan_app
     restart: always
     ports:
